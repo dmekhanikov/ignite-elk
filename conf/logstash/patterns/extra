@@ -1,0 +1,2 @@
+TOPOLOGY_SNAPSHOT Topology snapshot \[ver=(?<top_version>\d+), servers=(?<top_servers>\d+), clients=(?<top_clients>\d+), CPUs=(?<top_cpus>\d+), heap=(?<top_heap>[0-9.]+GB)\]
+JAVA_EXCEPTION (class )?(?<exception_class>\S+(?:Error|Exception))(: (?<exception_message>.*))?(\n.*)*
