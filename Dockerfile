@@ -1,5 +1,5 @@
 # Initial image
-FROM sebp/elk:563
+FROM sebp/elk:632
 
 # Remove default configuration files
 RUN rm /etc/logstash/conf.d/*.conf
@@ -8,7 +8,7 @@ RUN rm /etc/logstash/conf.d/*.conf
 COPY conf/logstash/ /etc/logstash/conf.d/
 
 # Install LogTrail Kibana plugin
-RUN /opt/kibana/bin/kibana-plugin install https://github.com/sivasamyk/logtrail/releases/download/v0.1.23/logtrail-5.6.3-0.1.23.zip
+RUN /opt/kibana/bin/kibana-plugin install https://github.com/sivasamyk/logtrail/releases/download/v0.1.29/logtrail-6.3.2-0.1.29.zip
 
 # Copy LogTrail configuration
 COPY conf/kibana/logtrail/ /opt/kibana/plugins/logtrail/
