@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+python3 /usr/bin/add_index_pattern.py /opt/kibana/plugins/logtrail/logtrail.json "$@"
+
+service kibana restart
