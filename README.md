@@ -1,11 +1,12 @@
 # ELK for Apache Ignite logs analysis #
 
-This repository contains a configuration of Elasticsearch, Logstash and Kibana for convenient analysis of logs produced by Apache Ignite.
+This repository contains a configuration of Elasticsearch, Logstash and Kibana for convenient analysis of logs produced
+by Apache Ignite.
 
 It also contains a Dockerfile that allows building a Docker image with everything installed and configured inside.
 ## Building and running a Docker image ##
 To build a Docker image you should run a standard command which is:
-```bash 
+```bash
 $ docker build . -t ignite-elk
 ```
 
@@ -21,28 +22,35 @@ There are some useful ports, that you may want to publish from the container:
 |------|-----------------------------|
 | 9200 | Elasticsearch Rest API      |
 | 9300 | Elasticsearch TCP Transport |
-| 9400 | Logstash TCP Input          |
+| 9400 | Logstash HTTP Input         |
 | 5601 | Kibana Web Interface        |
 
 ## Usage ##
-To post logs for analysis you should write it as a plain text to port 9400.
+To post logs for analysis you should send it in a POST HTTP request as a plain text to port 9400.
 For example, you can do it by executing the following command:
 ```bash
-$ cat <log file> | nc -c localhost 9400
+$ curl -X POST localhost:9400/<index name> --data-binary @<log file>
 ```
 
-After that the log will be indexed by Elasticsearch. To access it, go to http://localhost:5601/
+`--data-binary` flag is required to preserve newline characters.
 
-LogTrail plugin is available in Kibana, which is the most convenient way to view logs.
+After that the log will be indexed by Elasticsearch in index with the provided name. To access it go to
+http://localhost:5601/
+
+[LogTrail](https://github.com/sivasamyk/logtrail) plugin is available in Kibana, which is the most convenient way
+to view logs. By default it shows records from `logstash-*` indexes. To change it or add more options, edit
+`/opt/kibana/plugins/logtrail/logtrail.json` file inside the Docker container and restart Kibana.
 
 ## Troubleshooting ##
 If Docker container doesn't start, check out log of the failed container by running:
 ```bash
 $ docker logs <name of container>
 ```
-The most probable reason of failures is a small value of ```vm.max_map_count``` system parameter. To increase it, run the following command on a host machine:
-```
+The most probable reason of failures is a small value of ```vm.max_map_count``` system parameter. To increase it, run
+the following command on a host machine:
+```bash
 # sysctl -w vm.max_map_count=262144
 ```
 
-For more information refer to [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html).
+For more information refer to
+[Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html).
