@@ -37,9 +37,24 @@ $ curl -X POST localhost:9400/<index name> --data-binary @<log file>
 After that the log will be indexed by Elasticsearch in index with the provided name. To access it go to
 http://localhost:5601/
 
+## LogTrail ##
 [LogTrail](https://github.com/sivasamyk/logtrail) plugin is available in Kibana, which is the most convenient way
 to view logs. By default it shows records from `logstash-*` indexes. To change it or add more options, edit
 `/opt/kibana/plugins/logtrail/logtrail.json` file inside the Docker container and restart Kibana.
+
+It can be done using `add-idx` and `remove-idx` scripts, which are available on the path inside the container.
+
+For example, to add indexes called `staging` and `production` to LogTrail configuration, you can do the following:
+```bash
+$ docker exec ignite-elk add-idx staging production
+```
+
+Any number of index names can be provided to the script.
+
+Indexes can be removed using an analogous command:
+```bash
+$ docker exec ignite-elk remove-idx staging production
+```
 
 ## Troubleshooting ##
 If Docker container doesn't start, check out log of the failed container by running:
