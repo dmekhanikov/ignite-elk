@@ -1,6 +1,6 @@
 {
   "index_patterns" : [
-    {      
+    {
       "es": {
         "default_index": "logstash-*"
       },
@@ -14,8 +14,8 @@
       "max_events_to_keep_in_viewer": 5000,
       "fields" : {
         "mapping" : {
-            "timestamp" : "timestamp",
-            "display_timestamp" : "timestamp",
+            "timestamp" : "@timestamp",
+            "display_timestamp" : "@timestamp",
             "hostname" : "thread_pool",
             "program": "thread",
             "message": "text"
@@ -31,6 +31,6 @@
           "TRACE": "#a2cd5a"
          }
       }
-    }  
+    }
   ]
 }
