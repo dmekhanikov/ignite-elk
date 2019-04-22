@@ -87,6 +87,36 @@ Indexes can be removed using an analogous command:
 $ docker exec ignite-elk remove-idx staging production
 ```
 
+## Log4J2 configuration for use with ELK ##
+Log4J2 can be configured to post logs right into ELK without writing them into any intermediate files.
+The following piece of configuration sets up the HTTP appender that posts logs to Logstash.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <properties>
+        <property name="pattern"></property>
+    </properties>
+    <Appenders>
+        <Http name="LOGSTASH" url="http://localhost:9400/ignite-${sys:nodeId}">
+            <Property name="X-Java-Runtime" value="$${java:runtime}" />
+            <PatternLayout>
+                <Pattern>[%d{ISO8601}][%-5p][%t][%c{1}]%notEmpty{[%markerSimpleName]} %m%n</Pattern>
+            </PatternLayout>
+        </Http>
+        <Async name="LOGSTASH_ASYNC" bufferSize="204800">
+          <AppenderRef ref="LOGSTASH" />
+        </Async>
+    </Appenders>
+
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="LOGSTASH_ASYNC" level="DEBUG"/>
+        </Root>
+    </Loggers>
+</Configuration>
+```
+
 ## Troubleshooting ##
 If Docker container doesn't start, check out log of the failed container by running:
 ```bash
